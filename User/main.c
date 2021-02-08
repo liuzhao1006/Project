@@ -27,7 +27,8 @@ int main (void)
 	KEY_Init();
 
 	BUZZER_Init();
-	BUZZER_BEEP1();
+	//BUZZER_BEEP1();
+	MIDI_PLAY();
 
 	//从指定页的地址读FLASH
 	a = FLASH_R(FLASH_START_ADDR);

@@ -9,6 +9,6 @@
 
 void BUZZER_Init(void);//≥ı ºªØ
 void BUZZER_BEEP1(void);//œÏ“ª…˘
-
+void MIDI_PLAY(void);
 		 				    
 #endif
