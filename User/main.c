@@ -5,9 +5,10 @@
 #include "key.h"     	
 #include "flash.h"
 #include "buzzer.h"
+#include "usart.h"
 
 #define FLASH_START_ADDR  0x0801f000	  //写入的起始地址
-
+#define Baud_Rate  115200	  //写入的起始地址
 
 int main (void)
 {			 
@@ -26,6 +27,8 @@ int main (void)
 	// 初始化KEY驱动
 	KEY_Init();
 
+	uart_init(Baud_Rate);
+
 	BUZZER_Init();
 	//BUZZER_BEEP1();
 	MIDI_PLAY();
@@ -39,6 +42,8 @@ int main (void)
     dutyCycle = 1;
 	while(1)
 	{
+	    // USART_SendData(USART1 , 0x55);
+		while(USART_GetFlagStatus(USART1, USART_FLAG_TC)==RESET);
 	    if(!GPIO_ReadInputDataBit(KEYPORT,KEY1)){ //读按键接口的电平
             delay_ms(20); //延时去抖动
             if(!GPIO_ReadInputDataBit(KEYPORT,KEY1)){ //读按键接口的电平

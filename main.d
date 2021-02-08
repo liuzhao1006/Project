@@ -34,3 +34,5 @@ main.o: .\Hardware\LED\led.h
 main.o: .\Hardware\KEY\key.h
 main.o: .\Basic\flash\flash.h
 main.o: .\Hardware\BUZZER\buzzer.h
+main.o: .\Basic\usart\usart.h
+main.o: C:\Keil\ARM\RV31\INC\stdio.h
