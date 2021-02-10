@@ -81,7 +81,7 @@ void uart_init(u32 bound){
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;//无硬件数据流控制
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;	//收发模式
     USART_Init(USART1, &USART_InitStructure); //初始化串口
-    USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);//开启ENABLE/关闭DISABLE中断
+    USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);//开启ENABLE/关闭DISABLE中断
     USART_Cmd(USART1, ENABLE);                    //使能串口 
 }
 
