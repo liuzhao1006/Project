@@ -30,5 +30,8 @@ main.o: .\Lib\inc\stm32f10x_wwdg.h
 main.o: .\Lib\inc\misc.h
 main.o: .\Basic\sys\sys.h
 main.o: .\Basic\delay\delay.h
+main.o: .\Hardware\LED\led.h
+main.o: .\Hardware\KEY\key.h
+main.o: .\Hardware\BUZZER\buzzer.h
 main.o: .\Basic\usart\usart.h
 main.o: C:\Keil\ARM\RV31\INC\stdio.h
