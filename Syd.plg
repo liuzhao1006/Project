@@ -156,3 +156,16 @@ linking...
 Program Size: Code=8562 RO-data=450 RW-data=60 ZI-data=1836  
 FromELF: creating hex file...
 "Syd.axf" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+User\main.c(24): warning:  #223-D: function "uart_init" declared implicitly
+User\main.c:    uart_init(BAUD_RATE);
+User\main.c:    ^
+User\main.c: User\main.c: 1 warning, 0 errors
+compiling usart.c...
+linking...
+Syd.axf: Error: L6218E: Undefined symbol USART1_RX_STA (referred from main.o).
+Syd.axf: Error: L6218E: Undefined symbol uart_init (referred from main.o).
+Syd.axf: Not enough information to list image symbols.
+Syd.axf: Finished: 1 information, 0 warning and 2 error messages.
+Target not created
