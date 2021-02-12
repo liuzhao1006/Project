@@ -38,3 +38,4 @@ main.o: C:\Keil\ARM\RV31\INC\stdarg.h
 main.o: C:\Keil\ARM\RV31\INC\stdlib.h
 main.o: C:\Keil\ARM\RV31\INC\string.h
 main.o: C:\Keil\ARM\RV31\INC\stdio.h
+main.o: .\Basic\rtc\rtc.h

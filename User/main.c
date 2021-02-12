@@ -4,7 +4,8 @@
 #include "led.h"
 #include "key.h"
 #include "buzzer.h"	
-#include "usart.h"
+#include "usart.h"	 	
+#include "rtc.h"
 
 #define BAUD_RATE 115200	  //写入的起始地址
 
@@ -48,6 +49,10 @@ int main (void)
 				printf("指令错误！\r\n"); 
 			}
 			USART1_RX_STA=0; //将串口数据标志位清0
+		}
+		if (RTC_Get() == 0) {
+			GPIO_WriteBit(LEDPORT,LED1,(BitAction)(rsec%2)); //LED1接口
+			GPIO_WriteBit(LEDPORT,LED2,(BitAction)(rmin%2)); //LED2接口
 		}
 	}
 }
