@@ -40,3 +40,5 @@ main.o: C:\Keil\ARM\RV31\INC\stdio.h
 main.o: .\Hardware\TM1640\TM1640.h
 main.o: .\Basic\rtc\rtc.h
 main.o: .\Hardware\ENCODER\encoder.h
+main.o: .\Hardware\LM75A\lm75a.h
+main.o: .\Basic\i2c\i2c.h
