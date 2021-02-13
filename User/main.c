@@ -10,10 +10,13 @@
 #define BAUD_RATE 115200	  //写入的起始地址
 
 int main (void)
-{			
+{		
+	u8 bya;	
 	// 初始化配置
     RCC_Configuration();
-
+	
+    RTC_Config(); 
+	
 	LED_Init();
 
 	KEY_Init();
@@ -26,30 +29,46 @@ int main (void)
 
 	while(1)
 	{
-        
-		if(USART1_RX_STA&0xC000){ //如果标志位是0xC000表示收到数据串完成，可以处理。
+	    // 如果标志位是0XC000表示收到数据串口完成，可以处理
+        if(USART1_RX_STA&0xC000){ //如果标志位是0xC000表示收到数据串完成，可以处理。
 			if((USART1_RX_STA&0x3FFF)==0){ //单独的回车键再显示一次欢迎词
-				printf("\033[1;47;33m\r\n"); //设置颜色（参考超级终端使用）
-				printf(" 1y--开LED1灯      1n--关LED1灯 \r\n");
-				printf(" 2y--开LED2灯      2n--关LED2灯 \r\n");
-				printf(" 请输入控制指令，按回车键执行！ \033[0m\r\n");
-			}else if((USART1_RX_STA&0x3FFF)==2 && USART1_RX_BUF[0]=='1' && USART1_RX_BUF[1]=='y'){ //判断数据是不是2个，第一个数据是不是“1”，第二个是不是“y”
-				GPIO_SetBits(LEDPORT,LED1); //LED灯都为高电平（1）
-				printf("1y -- LED1灯已经点亮！\r\n");
-			}else if((USART1_RX_STA&0x3FFF)==2 && USART1_RX_BUF[0]=='1' && USART1_RX_BUF[1]=='n'){
-				GPIO_ResetBits(LEDPORT,LED1); ////LED灯都为低电平（0）
-				printf("1n -- LED1灯已经熄灭！\r\n");
-			}else if((USART1_RX_STA&0x3FFF)==2 && USART1_RX_BUF[0]=='2' && USART1_RX_BUF[1]=='y'){
-				GPIO_SetBits(LEDPORT,LED2); //LED灯都为高电平（1）
-				printf("2y -- LED2灯已经点亮！\r\n");
-			}else if((USART1_RX_STA&0x3FFF)==2 && USART1_RX_BUF[0]=='2' && USART1_RX_BUF[1]=='n'){
-				GPIO_ResetBits(LEDPORT,LED2); ////LED灯都为低电平（0）
-				printf("2n -- LED2灯已经熄灭！\r\n");
-			}else{ //如果以上都不是，即是错误的指令。
-				printf("指令错误！\r\n"); 
+				if(RTC_Get()==0){ //读出时间值，同时判断返回值是不是0，非0时读取的值是错误的。
+					printf(" 洋桃开发板STM32实时时钟测试程序   \r\n");
+					printf(" 现在实时时间：%d-%d-%d %d:%d:%d  ",ryear,rmon,rday,rhour,rmin,rsec);//显示日期时间
+					if(rweek==0)printf("星期日   \r\n");//rweek值为0时表示星期日
+					if(rweek==1)printf("星期一   \r\n");
+					if(rweek==2)printf("星期二   \r\n");
+					if(rweek==3)printf("星期三   \r\n");
+					if(rweek==4)printf("星期四   \r\n");
+					if(rweek==5)printf("星期五   \r\n");
+					if(rweek==6)printf("星期六   \r\n");
+					printf(" 单按回车键更新时间。输入字母C初始化时钟 \r\n");
+					printf(" 请输入设置时间，格式20170806120000，按回车键确定！ \r\n");
+				}else{
+					printf("读取失败！\r\n");
+				}
+			}else if((USART1_RX_STA&0x3FFF)==1){ //判断数据是不是2个
+				if(USART1_RX_BUF[0]=='c' || USART1_RX_BUF[0]=='C'){
+					RTC_First_Config(); //键盘输入c或C，初始化时钟
+					BKP_WriteBackupRegister(BKP_DR1, 0xA5A5);//配置完成后，向后备寄存器中写特殊字符0xA5A5
+					printf("初始化成功！      \r\n");//显示初始化成功
+				}else{
+					printf("指令错误！          \r\n"); //显示指令错误！
+				} 
+			}else if((USART1_RX_STA&0x3FFF)==14){ //判断数据是不是14个
+				//将超级终端发过来的数据换算并写入RTC
+				ryear = (USART1_RX_BUF[0]-0x30)*1000+(USART1_RX_BUF[1]-0x30)*100+(USART1_RX_BUF[2]-0x30)*10+USART1_RX_BUF[3]-0x30;
+				rmon = (USART1_RX_BUF[4]-0x30)*10+USART1_RX_BUF[5]-0x30;//串口发来的是字符，减0x30后才能得到十进制0~9的数据
+				rday = (USART1_RX_BUF[6]-0x30)*10+USART1_RX_BUF[7]-0x30;
+				rhour = (USART1_RX_BUF[8]-0x30)*10+USART1_RX_BUF[9]-0x30;
+				rmin = (USART1_RX_BUF[10]-0x30)*10+USART1_RX_BUF[11]-0x30;
+				rsec = (USART1_RX_BUF[12]-0x30)*10+USART1_RX_BUF[13]-0x30;
+				bya=RTC_Set(ryear,rmon,rday,rhour,rmin,rsec); //将数据写入RTC计算器的程序
+				if(bya==0)printf("写入成功！      \r\n");//显示写入成功 
+				else printf("写入失败！       \r\n"); //显示写入失败
 			}
 			USART1_RX_STA=0; //将串口数据标志位清0
-		}
+		} 
 		if (RTC_Get() == 0) {
 			GPIO_WriteBit(LEDPORT,LED1,(BitAction)(rsec%2)); //LED1接口
 			GPIO_WriteBit(LEDPORT,LED2,(BitAction)(rmin%2)); //LED2接口
