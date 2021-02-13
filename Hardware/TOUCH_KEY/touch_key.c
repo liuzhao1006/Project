@@ -1,9 +1,9 @@
 #include "touch_key.h"
 
-void TOUCH_KEY_Init(void){ //å¾®åŠ¨å¼€å…³çš„æ¥å£åˆå§‹åŒ–
-	GPIO_InitTypeDef  GPIO_InitStructure; //å®šä¹‰GPIOçš„åˆå§‹åŒ–æšä¸¾ç»“æ„	
-    GPIO_InitStructure.GPIO_Pin = TOUCH_KEY_A | TOUCH_KEY_B | TOUCH_KEY_C | TOUCH_KEY_D; //é€‰æ‹©ç«¯å£                       
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; //é€‰æ‹©IOæ¥å£å·¥ä½œæ–¹å¼ //ä¸Šæ‹‰ç”µé˜»       
+void TOUCH_KEY_Init(void){ // Î¢¶¯¿ª¹ØµÄ½Ó¿Ú³õÊ¼»¯
+	GPIO_InitTypeDef  GPIO_InitStructure; // ¶¨ÒåGPIOµÄ³õÊ¼»¯Ã¶¾Ù	
+    GPIO_InitStructure.GPIO_Pin = TOUCH_KEY_A | TOUCH_KEY_B | TOUCH_KEY_C | TOUCH_KEY_D; // Ñ¡Ôñ¶Ë¿Ú                      
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; //Ñ¡ÔñIO½Ó¿Ú¹¤×÷·½Ê½£¬ÉÏÀ­µç×è   
 	GPIO_Init(TOUCH_KEYPORT,&GPIO_InitStructure);			
 }
 
