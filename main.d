@@ -31,11 +31,4 @@ main.o: .\Lib\inc\misc.h
 main.o: .\Basic\sys\sys.h
 main.o: .\Basic\delay\delay.h
 main.o: .\Hardware\LED\led.h
-main.o: .\Hardware\KEY\key.h
-main.o: .\Hardware\BUZZER\buzzer.h
-main.o: .\Basic\usart\usart.h
-main.o: C:\Keil\ARM\RV31\INC\stdarg.h
-main.o: C:\Keil\ARM\RV31\INC\stdlib.h
-main.o: C:\Keil\ARM\RV31\INC\string.h
-main.o: C:\Keil\ARM\RV31\INC\stdio.h
-main.o: .\Basic\rtc\rtc.h
+main.o: .\Hardware\TOUCH_KEY\touch_key.h
