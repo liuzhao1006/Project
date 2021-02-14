@@ -42,3 +42,4 @@ main.o: .\Basic\rtc\rtc.h
 main.o: .\Hardware\ENCODER\encoder.h
 main.o: .\Hardware\LM75A\lm75a.h
 main.o: .\Basic\i2c\i2c.h
+main.o: .\Hardware\OLED0561\oled0561.h
