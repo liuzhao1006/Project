@@ -9,6 +9,7 @@
 #include "encoder.h"
 #include "lm75a.h"
 #include "oled0561.h"
+#include "relay.h"
 
 #define BAUD_RATE 115200      //写入的起始地址
 
@@ -22,6 +23,9 @@ int main (void)
     // 初始化配置
     RCC_Configuration();
     I2C_Configuration();
+
+    TOUCH_KEY_Init();
+    RELAY_Init();
 
     RTC_Config();
     ENCODER_Init();
@@ -77,6 +81,22 @@ int main (void)
         OLED_DISPLAY_8x16(6, 12 * 8, buffer[2] % 10 + 0x30);
         OLED_DISPLAY_8x16(6, 13 * 8, 'C');
         delay_ms(200);
+
+        if(!GPIO_ReadInputDataBit(TOUCH_KEYPORT, TOUCH_KEY_A)) {
+            RELAY_1(1);
+        }
+
+        if(!GPIO_ReadInputDataBit(TOUCH_KEYPORT, TOUCH_KEY_B)) {
+            RELAY_1(0);
+        }
+
+        if(!GPIO_ReadInputDataBit(TOUCH_KEYPORT, TOUCH_KEY_C)) {
+            RELAY_2(1);
+        }
+
+        if(!GPIO_ReadInputDataBit(TOUCH_KEYPORT, TOUCH_KEY_D)) {
+            RELAY_2(0);
+        }
     }
 }
 
