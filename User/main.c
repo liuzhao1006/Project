@@ -11,10 +11,11 @@
 #include "oled0561.h"
 #include "relay.h"
 #include "adc.h"
+#include "JoyStick.h"
 
 #define BAUD_RATE 115200      //写入的起始地址
 
-extern vu16 ADC_DMA_IN5[2]; //声明外部变量
+extern vu16 ADC_DMA_IN5[4]; //声明外部变量
 
 int main (void)
 {
@@ -54,18 +55,19 @@ int main (void)
 
     // ADC初始化设置
     ADC_Configuration();
+    JoyStick_Init();
 
     OLED_DISPLAY_CLEAR();
-    OLED_DISPLAY_8x16_BUFFER(0, "   LiuZhao   ");
-    OLED_DISPLAY_8x16_BUFFER(2, "ADC:");
-    OLED_DISPLAY_8x16_BUFFER(4, "  ADC_IN4   :");
-    OLED_DISPLAY_8x16_BUFFER(6, "  ADC_IN5   :");
+    OLED_DISPLAY_8x16_BUFFER(0, "  ADC_IN4   :");
+    OLED_DISPLAY_8x16_BUFFER(2, "  ADC_IN5   :");
+    OLED_DISPLAY_8x16_BUFFER(4, "  ADC_IN6   :");
+    OLED_DISPLAY_8x16_BUFFER(6, "  ADC_IN7   :");
 
     //汉字显示 刘朝电子
-    OLED_DISPLAY_16x16(2, 3 * 16, 0);
-    OLED_DISPLAY_16x16(2, 4 * 16, 1);
-    OLED_DISPLAY_16x16(2, 5 * 16, 2);
-    OLED_DISPLAY_16x16(2, 6 * 16, 3);
+    // OLED_DISPLAY_16x16(2, 3 * 16, 0);
+    // OLED_DISPLAY_16x16(2, 4 * 16, 1);
+    // OLED_DISPLAY_16x16(2, 5 * 16, 2);
+    // OLED_DISPLAY_16x16(2, 6 * 16, 3);
     while(1)
     {
         // 读取LM75A的温度数据
@@ -82,15 +84,25 @@ int main (void)
         if(buffer[0]) {
             OLED_DISPLAY_8x16(6, 7 * 8, '-');
         }
-        OLED_DISPLAY_8x16(4, 10 * 8, ADC_DMA_IN5[1] / 1000 + 0x30);
-        OLED_DISPLAY_8x16(4, 11 * 8, ADC_DMA_IN5[1] % 1000 / 100 + 0x30);
-        OLED_DISPLAY_8x16(4, 12 * 8, ADC_DMA_IN5[1] % 100 / 10 + 0x30);
-        OLED_DISPLAY_8x16(4, 13 * 8, ADC_DMA_IN5[1] % 10 + 0x30);
+        OLED_DISPLAY_8x16(0, 10 * 8, ADC_DMA_IN5[0] / 1000 + 0x30);
+        OLED_DISPLAY_8x16(0, 11 * 8, ADC_DMA_IN5[0] % 1000 / 100 + 0x30);
+        OLED_DISPLAY_8x16(0, 12 * 8, ADC_DMA_IN5[0] % 100 / 10 + 0x30);
+        OLED_DISPLAY_8x16(0, 13 * 8, ADC_DMA_IN5[0] % 10 + 0x30);
 
-        OLED_DISPLAY_8x16(6, 10 * 8, ADC_DMA_IN5[0] / 1000 + 0x30);
-        OLED_DISPLAY_8x16(6, 11 * 8, ADC_DMA_IN5[0] % 1000 / 100 + 0x30);
-        OLED_DISPLAY_8x16(6, 12 * 8, ADC_DMA_IN5[0] % 100 / 10 + 0x30);
-        OLED_DISPLAY_8x16(6, 13 * 8, ADC_DMA_IN5[0] % 10 + 0x30);
+        OLED_DISPLAY_8x16(2, 10 * 8, ADC_DMA_IN5[1] / 1000 + 0x30);
+        OLED_DISPLAY_8x16(2, 11 * 8, ADC_DMA_IN5[1] % 1000 / 100 + 0x30);
+        OLED_DISPLAY_8x16(2, 12 * 8, ADC_DMA_IN5[1] % 100 / 10 + 0x30);
+        OLED_DISPLAY_8x16(2, 13 * 8, ADC_DMA_IN5[1] % 10 + 0x30);
+
+        OLED_DISPLAY_8x16(4, 10 * 8, ADC_DMA_IN5[2] / 1000 + 0x30);
+        OLED_DISPLAY_8x16(4, 11 * 8, ADC_DMA_IN5[2] % 1000 / 100 + 0x30);
+        OLED_DISPLAY_8x16(4, 12 * 8, ADC_DMA_IN5[2] % 100 / 10 + 0x30);
+        OLED_DISPLAY_8x16(4, 13 * 8, ADC_DMA_IN5[2] % 10 + 0x30);
+
+        OLED_DISPLAY_8x16(6, 10 * 8, ADC_DMA_IN5[3] / 1000 + 0x30);
+        OLED_DISPLAY_8x16(6, 11 * 8, ADC_DMA_IN5[3] % 1000 / 100 + 0x30);
+        OLED_DISPLAY_8x16(6, 12 * 8, ADC_DMA_IN5[3] % 100 / 10 + 0x30);
+        OLED_DISPLAY_8x16(6, 13 * 8, ADC_DMA_IN5[3] % 10 + 0x30);
         delay_ms(500);
 
         if(!GPIO_ReadInputDataBit(TOUCH_KEYPORT, TOUCH_KEY_A)) {
@@ -107,6 +119,12 @@ int main (void)
 
         if(!GPIO_ReadInputDataBit(TOUCH_KEYPORT, TOUCH_KEY_D)) {
             RELAY_2(0);
+        }
+
+        if(GPIO_ReadInputDataBit(JoyStickPORT,JoyStick_KEY)==0){
+            OLED_DISPLAY_8x16(0,0,'Y');
+        }else{
+            OLED_DISPLAY_8x16(0,0,' ');
         }
     }
 }

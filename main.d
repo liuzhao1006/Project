@@ -45,3 +45,4 @@ main.o: .\Basic\i2c\i2c.h
 main.o: .\Hardware\OLED0561\oled0561.h
 main.o: .\Hardware\RELAY\relay.h
 main.o: .\Basic\adc\adc.h
+main.o: .\Hardware\JoyStick\JoyStick.h
