@@ -53,7 +53,7 @@
 ### ADS-LD Output File: 'Syd.axf'
 ### ADS-LD Command File: 'Syd.lnp'
 ### Checking for dirty Components...
-### Creating CmdFile 'Syd.lnp', Handle=0x00000DF0
+### Creating CmdFile 'Syd.lnp', Handle=0x00000DD0
 ### Writing '.lnp' file
 ### ADS-LD Command file 'Syd.lnp' is ready.
 ### ADS-LD: About to start ADS-LD Thread.

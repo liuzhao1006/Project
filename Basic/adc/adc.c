@@ -1,6 +1,6 @@
 #include "adc.h"
 
-vu16 ADC_DMA_IN5; //ADC数值存放的变量
+vu16 ADC_DMA_IN5[2]; //ADC数值存放的变量
 
 void ADC_DMA_Init(void){ //DMA初始化设置
     DMA_InitTypeDef DMA_InitStructure;//定义DMA初始化结构体
@@ -8,9 +8,9 @@ void ADC_DMA_Init(void){ //DMA初始化设置
     DMA_InitStructure.DMA_PeripheralBaseAddr = ADC1_DR_Address; //定义 DMA通道外设基地址=ADC1_DR_Address
     DMA_InitStructure.DMA_MemoryBaseAddr = (u32)&ADC_DMA_IN5; //定义DMA通道ADC数据存储器（其他函数可直接读此变量即是ADC值）
     DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;//指定外设为源地址
-    DMA_InitStructure.DMA_BufferSize = 1;//定义DMA缓冲区大小（根据ADC采集通道数量修改）
+    DMA_InitStructure.DMA_BufferSize = 2;//定义DMA缓冲区大小（根据ADC采集通道数量修改）
     DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;//当前外设寄存器地址不变
-    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Disable;//当前存储器地址：Disable不变，Enable递增（用于多通道采集）
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;//当前存储器地址：Disable不变，Enable递增（用于多通道采集）
     DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;//定义外设数据宽度16位
     DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord; //定义存储器数据宽度16位
     DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;//DMA通道操作模式位环形缓冲模式
@@ -24,7 +24,7 @@ void ADC_GPIO_Init(void){ //GPIO初始化设置
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB|RCC_APB2Periph_GPIOC,ENABLE);       
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);//使能DMA时钟（用于ADC的数据传送）
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);//使能ADC1时钟
-    GPIO_InitStructure.GPIO_Pin = ADC_CH5; //选择端口                        
+    GPIO_InitStructure.GPIO_Pin = ADC_CH4 | ADC_CH5; //选择端口                        
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN; //选择IO接口工作方式       
     GPIO_Init(ADCPORT, &GPIO_InitStructure);            
 }
@@ -37,11 +37,12 @@ void ADC_Configuration(void){ //初始化设置
     ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;//ADC转换工作在连续模式
     ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;//有软件控制转换
     ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;//转换数据右对齐
-    ADC_InitStructure.ADC_NbrOfChannel = 1;//顺序进行规则转换的ADC通道的数目（根据ADC采集通道数量修改）
+    ADC_InitStructure.ADC_NbrOfChannel = 2;//顺序进行规则转换的ADC通道的数目（根据ADC采集通道数量修改）
     ADC_Init(ADC1, &ADC_InitStructure); //根据ADC_InitStruct中指定的参数初始化外设ADCx的寄存器
     //设置指定ADC的规则组通道，设置它们的转化顺序和采样时间
-    //ADC1,ADC通道x,规则采样顺序值为y,采样时间为28周期        
-    ADC_RegularChannelConfig(ADC1, ADC_Channel_5, 1, ADC_SampleTime_28Cycles5);//ADC1选择信道x,采样顺序y,采样时间n个周期
+    //ADC1,ADC通道x,规则采样顺序值为y,采样时间为28周期         
+    ADC_RegularChannelConfig(ADC1, ADC_Channel_4, 1, ADC_SampleTime_28Cycles5);
+    ADC_RegularChannelConfig(ADC1, ADC_Channel_5, 2, ADC_SampleTime_28Cycles5);//ADC1选择信道x,采样顺序y,采样时间n个周期
 
     ADC_DMACmd(ADC1, ENABLE);// 开启ADC的DMA支持（要实现DMA功能，还需独立配置DMA通道等参数）
     ADC_Cmd(ADC1, ENABLE);//使能ADC1
